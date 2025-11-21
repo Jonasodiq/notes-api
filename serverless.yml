@@ -1,0 +1,91 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: salsabil
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: notes-api
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  iam:
+    role: arn:aws:iam::658813353419:role/notes-role
+  environment:
+    JWT_SECRET: "supersecret-key"
+
+  
+  
+
+functions:
+  SignUp:
+    handler: functions/signUp/index.handler
+    events:
+      - http:
+          path: user/signup
+          method: POST
+  Login:
+    handler: functions/login/index.handler
+    events:
+      - http:
+          path: user/login
+          method: POST
+  GetNotes:
+    handler: functions/getNotes/index.handler
+    events:
+      - httpApi:
+          path: /notes
+          method: GET
+  CreateNote:
+    handler: functions/createNotes/index.handler
+    events:
+      - httpApi:
+          path: /notes
+          method: POST
+  UpdateNote:
+    handler: functions/updateNotes/index.handler
+    events:
+      - httpApi:
+          path: /notes
+          method: PUT
+  DeleteNote:
+    handler: functions/deleteNotes/index.handler
+    events:
+      - httpApi:
+          path: /notes
+          method: DELETE
+  RestoreNote:
+    handler: functions/restoreNote/index.handler
+    events:
+      - http:
+          path: notes/restore
+          method: POST
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    NotesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Notes
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+
