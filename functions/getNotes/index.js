@@ -1,43 +1,33 @@
-// const middy = require("middy");
-// const { authMiddleware } = require("../../utils/middleware");
-
-// const handler = async (event) => {
-//   // event.user.email finns nu här!
-//   return {
-//     statusCode: 200,
-//     body: JSON.stringify({ message: "Protected OK", user: event.user })
-//   };
-// };
-
-// module.exports.handler = middy(handler).use(authMiddleware());
-
-
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const middy = require("middy");
 const { authMiddleware } = require("../../utils/middleware");
+const { success, error } = require("../../utils/responses");
+
+const client = new DynamoDBClient({});
+const db = DynamoDBDocumentClient.from(client);
 
 const handler = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Protected OK",
-      user: event.user
-    })
-  };
-};
+  try {
+    const userId = event.user.email;
 
-module.exports.handler = middy(handler)
-  .use(authMiddleware())
-  .onError((handler, next) => {
-    const status = handler.error.statusCode || 500;
-
-    handler.response = {
-      statusCode: status,
-      body: JSON.stringify({
-        response: {
-          message: handler.error.message || "Unknown error"
+    // Query all notes for this user
+    const result = await db.send(
+      new QueryCommand({
+        TableName: "Notes",
+        KeyConditionExpression: "userId = :u",
+        ExpressionAttributeValues: {
+          ":u": userId
         }
       })
-    };
+    );
 
-    return next();
-  });
+    return success(result.Items || []);
+  } catch (err) {
+    console.error("Error getting notes:", err);
+    return error(500, "Failed to fetch notes.");
+  }
+};
+
+module.exports.handler = middy(handler).use(authMiddleware());
+
