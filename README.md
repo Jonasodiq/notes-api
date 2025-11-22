@@ -7,16 +7,19 @@ Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS
 
 
 ## Features.
-* Register (register) + Login (login) with hashed password (bcrypt)
-* JWT-based authentication
-* CRUD for notes
-* Soft delete + restore (trash)
-* Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
-* Middy middleware for authentication and error handling
-* DynamoDB with PK = userId (email) and SK = id (uuid)
+* 🧑‍💻 Register (register) + Login (login) with hashed password (bcrypt)
+* 🔐 JWT-based authentication
+* 📝 CRUD for notes
+* 🗑️ Soft delete + restore (trash)
+* ✔️ Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
+  * title ≤ 50 characters
+  * text ≤ 300 characters
+* 🧩 Middy middleware for authentication and error handling
+* 🗄️ DynamoDB with PK = userId (email) and SK = id (uuid)
+  * PK = userId (email or UUID)
+  * SK = id (uuid for each note)
 
-
-## Project structure
+## 📁 Project structure
 ```
   ├── functions
   │   ├── signUp/index.js
@@ -35,8 +38,9 @@ Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS
   └── README.md
 ```
 
-## Arkitektur (Mermaid-diagram)
-
+## 🏗️ Arkitektur (Mermaid-diagram)
+### API-flöde
+```
 flowchart LR
   A[Client (Postman / Frontend)] -->|POST /login| B[API Gateway]
   A -->|Requests with Bearer token| B
@@ -46,18 +50,21 @@ flowchart LR
   C --> F[Middy middleware (auth)]
   style D fill:#f9f,stroke:#333,stroke-width:1px
   style E fill:#ff9,stroke:#333,stroke-width:1px
+```
+
+## 🗄️ DynamoDB-modell
+### Notes Table
+* userId (PK, S)
+* id (SK, S)
+* title (S)
+* text (S)
+* createdAt (S, ISO)
+* modifiedAt (S, ISO)
+* deleted (BOOL)
 
 
-## DynamoDB-modell
-* userId (PK, S) — user email (or userId)
-* id (SK, S) — UUID of the note
-* title (S) — title (≤ 50)
-* text (S) — content (≤ 300)
-* createdAt (S, ISO timestamp)
-* modifiedAt (S, ISO timestamp)
-* deleted (BOOL) — soft delete flag
-
-### Mermaid diagram (simple ER view):
+### ER-Diagram
+```
 erDiagram
     USERS {
       string email PK
@@ -74,9 +81,10 @@ erDiagram
       boolean deleted
     }
     USERS ||--o{ NOTES : owns }
+```
 
-### JWT auth flow (Mermaid)
-
+### 🔑 JWT auth flow (Mermaid)
+```
 sequenceDiagram
   participant C as Client
   participant AG as API Gateway
@@ -93,8 +101,9 @@ sequenceDiagram
   F->>DynamoDB: query Notes by userId
   DynamoDB-->>F: results
   F-->>C: response (200)
+```
 
-## Installation & local development
+## Installation
 1. Clone repo
 ```bash
 git clone <repo-url>
@@ -109,77 +118,41 @@ npm install -g serverless
 ```bash
 aws configure
 Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, region
-````
+```
 4. Environment variables (local/serverless.yml)
 * JWT_SECRET — token secret key
 * (optional) STAGE, REGION
 
-5. Deploy
-```bash
-sls deploy
-```
-
-## Future improvements (roadmap)
-* Refresh tokens / token blacklist (logout)
-* Rate limiting / API Gateway WAF
-* Search index / global secondary indexes (GSI) for title search
-* Version management / change history for notes
-* File attachments (S3) + thumbnail
-* Integration tests & CI (GitHub Actions)
-* Monitoring (CloudWatch alarms + X-Ray)
-* Unit tests / Integration tests (jest + serverless offline)
-
-## License & credits
--- MIT License — free to use and modify
-
-## Usage
-
-### Deployment
-
+## Deployment
 In order to deploy the example, you need to run the following command:
 
 ```
-serverless deploy
+sls deploy
 ```
-
 After running deploy, you should see output similar to:
-
 ```
-Deploying "serverless-http-api" to stage "dev" (us-east-1)
-
-✔ Service deployed to stack serverless-http-api-dev (91s)
-
-endpoint: GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
+Deploying "notes-api" to stage "dev" (eu-north-1)
+✔ Service deployed to stack notes-api-dev (43s)
+endpoint: 
+  GET - https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
 functions:
-  hello: serverless-http-api-dev-hello (1.6 kB)
+  GetNotes: notes-api-dev-GetNotes (21 MB)
 ```
+## 🚀 Testing
+You can test the API via:
+* Insomnia (export file available in project)
+* Postman 
+* curl
 
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [HTTP API (API Gateway V2) event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api).
+## 🧭 Future improvements (roadmap)
+* 🔄 Refresh tokens / token blacklist (logout)
+* 🛡️ Rate limiting / API Gateway WAF
+* 🔍 Search index / global secondary indexes (GSI) for title search
+* 🗂 Version management / change history for notes
+* 📎 File attachments (S3) + thumbnail
+* 🧪 Integration tests & CI (GitHub Actions)
+* ⚙️ Monitoring (CloudWatch alarms + X-Ray)
+* 📊 Unit tests / Integration tests (jest + serverless offline)
 
-### Invocation
-
-After successful deployment, you can call the created application via HTTP:
-
-```
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
-```
-
-Which should result in response similar to:
-
-```json
-{ "message": "Go Serverless v4! Your function executed successfully!" }
-```
-
-### Local development
-
-The easiest way to develop and test your function is to use the `dev` command:
-
-```
-serverless dev
-```
-
-This will start a local emulator of AWS Lambda and tunnel your requests to and from AWS Lambda, allowing you to interact with your function as if it were running in the cloud.
-
-Now you can invoke the function as before, but this time the function will be executed locally. Now you can develop your function locally, invoke it, and see the results immediately without having to re-deploy.
-
-When you are done developing, don't forget to run `serverless deploy` to deploy the function to the cloud.
+## 📄 License & credits
+MIT License — free to use and modify
