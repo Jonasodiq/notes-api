@@ -35,19 +35,19 @@ functions:
           path: /notes
           method: GET
   CreateNote:
-    handler: functions/createNotes/index.handler
+    handler: functions/createNote/index.handler
     events:
       - httpApi:
           path: /notes
           method: POST
   UpdateNote:
-    handler: functions/updateNotes/index.handler
+    handler: functions/updateNote/index.handler
     events:
       - httpApi:
           path: /notes
           method: PUT
   DeleteNote:
-    handler: functions/deleteNotes/index.handler
+    handler: functions/deleteNote/index.handler
     events:
       - httpApi:
           path: /notes
