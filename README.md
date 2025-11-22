@@ -40,7 +40,7 @@ Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS
 
 ## 🏗️ Arkitektur (Mermaid-diagram)
 ### API-flöde
-```
+```mermaid
 flowchart LR
   A[Client (Postman / Frontend)] -->|POST /login| B[API Gateway]
   A -->|Requests with Bearer token| B
