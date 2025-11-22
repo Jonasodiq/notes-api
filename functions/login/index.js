@@ -39,11 +39,8 @@ exports.handler = async (event) => {
 
     // Create token
     const token = jwt.sign(
-      {
-        email: user.Item.email,
-      },
-      JWT_SECRET,
-      { expiresIn: "1h" }
+      { email: user.Item.email },
+      JWT_SECRET, { expiresIn: "1h" }
     );
 
     return success({
