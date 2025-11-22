@@ -20,13 +20,13 @@ functions:
     handler: functions/signUp/index.handler
     events:
       - http:
-          path: user/signup
+          path: /user/signup
           method: POST
   Login:
     handler: functions/login/index.handler
     events:
       - http:
-          path: user/login
+          path: /user/login
           method: POST
   GetNotes:
     handler: functions/getNotes/index.handler
@@ -55,9 +55,15 @@ functions:
   RestoreNote:
     handler: functions/restoreNote/index.handler
     events:
-      - http:
-          path: notes/restore
+      - httpApi:
+          path: /notes/restore
           method: POST
+  GetDeletedNotes:
+    handler: functions/getDeletedNotes/index.handler
+    events:
+      - httpApi:
+          path: /notes/deleted
+          method: GET
 
 resources:
   Resources:
