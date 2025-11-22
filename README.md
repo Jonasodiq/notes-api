@@ -38,20 +38,6 @@ Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS
   └── README.md
 ```
 
-## 🏗️ Arkitektur (Mermaid-diagram)
-### API-flöde
-```mermaid
-flowchart LR
-  A[Client (Postman / Frontend)] -->|POST /login| B[API Gateway]
-  A -->|Requests with Bearer token| B
-  B --> C[Lambda Functions (Serverless)]
-  C --> D[DynamoDB (Notes Table)]
-  C --> E[Users Table (DynamoDB)]
-  C --> F[Middy middleware (auth)]
-  style D fill:#f9f,stroke:#333,stroke-width:1px
-  style E fill:#ff9,stroke:#333,stroke-width:1px
-```
-
 ## 🗄️ DynamoDB-modell
 ### Notes Table
 * userId (PK, S)
