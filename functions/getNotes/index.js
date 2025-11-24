@@ -30,4 +30,3 @@ const handler = async (event) => {
 };
 
 module.exports.handler = middy(handler).use(authMiddleware());
-

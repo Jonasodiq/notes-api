@@ -58,7 +58,6 @@ const handler = async (event) => {
     })
     );
 
-
     return success({
       id,
       title,
