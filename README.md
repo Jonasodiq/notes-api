@@ -123,15 +123,52 @@ classDiagram
     +getNotes()
     +createNote()
     +updateNote()
-    +deleteNote()
     +restoreNote()
     +getDeletedNotes()
+    +deleteNote()
   }
   AuthMiddleware <.. UserHandlers
   AuthMiddleware <.. NotesHandlers
   NotesHandlers --> DynamoNotesTable
   UserHandlers --> DynamoUserTable
+
 ```
+
+```mermaid
+---
+title: Bank example
+---
+classDiagram
+    class BankAccount
+    BankAccount : +String owner
+    BankAccount : +Bigdecimal balance
+    BankAccount : +deposit(amount)
+    BankAccount : +withdrawal(amount)
+
+
+```
+```mermaid
+erDiagram
+    direction TB
+    CUSTOMER ||--o{ ORDER : places
+    CUSTOMER {
+        string name
+        string custNumber
+        string sector
+    }
+    ORDER ||--|{ LINE-ITEM : contains
+    ORDER {
+        int orderNumber
+        string deliveryAddress
+    }
+    LINE-ITEM {
+        string productCode
+        int quantity
+        float pricePerUnit
+    }
+
+```
+
 ___
 
 ### 4️⃣ DynamoDB – Database model
