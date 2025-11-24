@@ -10,10 +10,7 @@ provider:
   iam:
     role: arn:aws:iam::658813353419:role/notes-role
   environment:
-    JWT_SECRET: "supersecret-key"
-
-  
-  
+    JWT_SECRET: ${env:JWT_SECRET}
 
 functions:
   SignUp:
