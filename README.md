@@ -133,42 +133,16 @@ classDiagram
   UserHandlers --> DynamoUserTable
 
 ```
-
 ```mermaid
----
-title: Bank example
----
-classDiagram
-    class BankAccount
-    BankAccount : +String owner
-    BankAccount : +Bigdecimal balance
-    BankAccount : +deposit(amount)
-    BankAccount : +withdrawal(amount)
+sequenceDiagram
+    Alice ->> Bob: Hello Bob, how are you?
+    Bob-->>John: How about you John?
+    Bob--x Alice: I am good thanks!
+    Bob-x John: I am good thanks!
 
-
+    Bob-->Alice: Checking with John...
+    Alice->John: Yes... John, how are you?
 ```
-```mermaid
-erDiagram
-    direction TB
-    CUSTOMER ||--o{ ORDER : places
-    CUSTOMER {
-        string name
-        string custNumber
-        string sector
-    }
-    ORDER ||--|{ LINE-ITEM : contains
-    ORDER {
-        int orderNumber
-        string deliveryAddress
-    }
-    LINE-ITEM {
-        string productCode
-        int quantity
-        float pricePerUnit
-    }
-
-```
-
 ___
 
 ### 4️⃣ DynamoDB – Database model
