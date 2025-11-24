@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, GetCommand, DeleteCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const middy = require("middy");
 const { authMiddleware } = require("../../utils/middleware");
 const { success, error } = require("../../utils/responses");
@@ -28,14 +28,6 @@ const handler = async (event) => {
     if (!existing.Item) {
       return error(404, "Note not found or does not belong to you.");
     }
-
-    // Delete note
-    // await db.send(
-    //   new DeleteCommand({
-    //     TableName: "Notes",
-    //     Key: { userId, id }
-    //   })
-    // );
 
     // Update
     await db.send(
