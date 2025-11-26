@@ -3,65 +3,86 @@
 Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS Lambda and DynamoDB. Users can register, log in (JWT), and create, read, update, soft delete and restore notes. All notes are per-user and protected with JWT and a simple Middy middleware.
 
 ## 📱 Features
-* 🧑‍💻 Register (register) + Login (login) with hashed password (bcrypt)
-* 🔐 JWT-based authentication
-* 📝 CRUD for notes
-* 🗑️ Soft delete + restore (trash)
-* ✔️ Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
-  * title ≤ 50 characters
-  * text ≤ 300 characters
-* 🧩 Middy middleware for authentication and error handling
-* 🗄️ DynamoDB with PK = userId (email) and SK = id (uuid)
-  * PK = userId (email or UUID)
-  * SK = id (uuid for each note)
 
-## 📁 Project structure
-```
-root
-  ├──functions
-  │   ├── signUp/index.js
-  │   ├── logIn/index.js
-  │   ├── getNotes/index.js
-  │   ├── createNote/index.js
-  │   ├── updateNote/index.js
-  │   ├── deleteNote/index.js
-  │   ├── restoreNote/index.js
-  │   └── getDeletedNotes/index.js
-  ├──utils
-  │   ├── middleware.js
-  │   └── responses.js
-  ├── .env
-  ├── serverless.yml
-  ├── package.json
-  └── README.md
-```
+- 🧑‍💻 Register (register) + Login (login) with hashed password (bcrypt)
+- 🔐 JWT-based authentication
+- 📝 CRUD for notes
+- 🗑️ Soft delete + restore (trash)
+- ✔️ Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
 
-## 🗄️ DynamoDB-modell
+  - title ≤ 50 characters
 
-### 👤 Users Table
-  variable      | type | Description  
-| ------------- |:----:|--------------
-| email         |  S   | Primary key (PK)
-| passwordHash  |  S   | Hashed password
-| createdAt     |  S   | ISO timestamp
+  # Notes API
 
-### 📝 Notes Table
-  variable      | type | Description  
-| ------------- |:----:|--------------
-| userId        |  S   | Partition key (linked to Users.email)
-| id            |  S   | Sort key (unique note ID)
-| title         |  S   | Title of the note
-| text          |  S   | Note content
-| createdAt     |  S   | ISO timestamp
-| modifiedAt    |  S   | ISO timestamp
-| deleted       | BOOL | Soft delete flag
+  Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS Lambda and DynamoDB. Users can register, log in (JWT), and create, read, update, soft delete and restore notes. All notes are per-user and protected with JWT and a simple Middy middleware.
 
-## 📊 Mermaid-diagram
-<details>
-  <summary>Click to expand!</summary>
+  ## 📱 Features
+
+  - 🧑‍💻 Register (register) + Login (login) with hashed password (bcrypt)
+  - 🔐 JWT-based authentication
+  - 📝 CRUD for notes
+  - 🗑️ Soft delete + restore (trash)
+  - ✔️ Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
+    - title ≤ 50 characters
+    - text ≤ 300 characters
+  - 🧩 Middy middleware for authentication and error handling
+  - 🗄️ DynamoDB with PK = userId (email) and SK = id (uuid)
+    - PK = userId (email or UUID)
+    - SK = id (uuid for each note)
+
+  ## 📁 Project structure
+
+  ```
+  root
+    ├──functions
+    │   ├── signUp/index.js
+    │   ├── logIn/index.js
+    │   ├── getNotes/index.js
+    │   ├── createNote/index.js
+    │   ├── updateNote/index.js
+    │   ├── deleteNote/index.js
+    │   ├── restoreNote/index.js
+    │   └── getDeletedNotes/index.js
+    ├──utils
+    │   ├── middleware.js
+    │   └── responses.js
+    ├── .env
+    ├── serverless.yml
+    ├── package.json
+    └── README.md
+  ```
+
+  ## 🗄️ DynamoDB-modell
+
+  ### 👤 Users Table
+
+  | variable     | type | Description      |
+  | ------------ | :--: | ---------------- |
+  | email        |  S   | Primary key (PK) |
+  | passwordHash |  S   | Hashed password  |
+  | createdAt    |  S   | ISO timestamp    |
+
+  ### 📝 Notes Table
+
+  | variable   | type | Description                           |
+  | ---------- | :--: | ------------------------------------- |
+  | userId     |  S   | Partition key (linked to Users.email) |
+  | id         |  S   | Sort key (unique note ID)             |
+  | title      |  S   | Title of the note                     |
+  | text       |  S   | Note content                          |
+  | createdAt  |  S   | ISO timestamp                         |
+  | modifiedAt |  S   | ISO timestamp                         |
+  | deleted    | BOOL | Soft delete flag                      |
+
+  ## 📊 Mermaid-diagram
+
+  <details>
+    <summary>Click to expand!</summary>
 
   ### 1️⃣ System overview – Flowchart!
+
   ***
+
   ```mermaid
   flowchart TD
     A[Client<br/>Insomnia / Postman / Frontend]
@@ -72,184 +93,172 @@ root
     C --> D[(DynamoDB Notes)]
     C --> E[(DynamoDB Users)]
   ```
-___
 
-### 2️⃣ Sequence diagram: Create Note
-___
-```mermaid
-sequenceDiagram
-  participant C as Client
-  participant G as API Gateway
-  participant L as Lambda (createNote)
-  participant M as Middy Auth
-  participant DB as DynamoDB Notes
+  ***
 
-  C->>G: POST /notes (Bearer Token)
-  G->>L: Invoke Lambda
-  L->>M: Validate JWT
-  M-->>L: user { email }
-  L->>DB: PutItem (title, text, userEmail, id)
-  DB-->>L: OK
-  L-->>G: 200 { note }
-  G-->>C: Response
-```
-___
+  ### 2️⃣ Sequence diagram: Create Note
 
-### 3️⃣ Backend architecture (Class Diagram)
----
-```mermaid
-classDiagram
-  class AuthMiddleware {
-    +before(request)
-    +verifyToken(token)
-  }
-  class UserHandlers {
-    +signup(event)
-    +login(event)
-  }
-  class NotesHandlers {
-    +getNotes()
-    +createNote()
-    +updateNote()
-    +deleteNote()
-    +restoreNote()
-    +getDeletedNotes()
-  }
-  class DynamoUserTable {
-    +putUser()
-    +getUser()
-  }
-  class DynamoNotesTable {
-    +getNotes()
-    +createNote()
-    +updateNote()
-    +restoreNote()
-    +getDeletedNotes()
-    +deleteNote()
-  }
-  AuthMiddleware <.. UserHandlers
-  AuthMiddleware <.. NotesHandlers
-  NotesHandlers --> DynamoNotesTable
-  UserHandlers --> DynamoUserTable
+  ***
 
-```
+  ```mermaid
+  sequenceDiagram
+    participant C as Client
+    participant G as API Gateway
+    participant L as Lambda (createNote)
+    participant M as Middy Auth
+    participant DB as DynamoDB Notes
 
-```mermaid
----
-title: Bank example
----
-classDiagram
-    class BankAccount
-    BankAccount : +String owner
-    BankAccount : +Bigdecimal balance
-    BankAccount : +deposit(amount)
-    BankAccount : +withdrawal(amount)
+    C->>G: POST /notes (Bearer Token)
+    G->>L: Invoke Lambda
+    L->>M: Validate JWT
+    M-->>L: user { email }
+    L->>DB: PutItem (title, text, userEmail, id)
+    DB-->>L: OK
+    L-->>G: 200 { note }
+    G-->>C: Response
+  ```
 
+  ***
 
-```
-```mermaid
-erDiagram
-    direction TB
-    CUSTOMER ||--o{ ORDER : places
-    CUSTOMER {
-        string name
-        string custNumber
-        string sector
+  ### 3️⃣ Backend architecture (Class Diagram)
+
+  ***
+
+  ```mermaid
+  classDiagram
+    class AuthMiddleware {
+      +before(request)
+      +verifyToken(token)
     }
-    ORDER ||--|{ LINE-ITEM : contains
-    ORDER {
-        int orderNumber
-        string deliveryAddress
+    class UserHandlers {
+      +signup(event)
+      +login(event)
     }
-    LINE-ITEM {
-        string productCode
-        int quantity
-        float pricePerUnit
+    class NotesHandlers {
+      +getNotes()
+      +createNote()
+      +updateNote()
+      +deleteNote()
+      +restoreNote()
+      +getDeletedNotes()
+    }
+    class DynamoUserTable {
+      +putUser()
+      +getUser()
+    }
+    class DynamoNotesTable {
+      +getNotes()
+      +createNote()
+      +updateNote()
+      +restoreNote()
+      +getDeletedNotes()
+      +deleteNote()
+    }
+    AuthMiddleware <.. UserHandlers
+    AuthMiddleware <.. NotesHandlers
+    NotesHandlers --> DynamoNotesTable
+    UserHandlers --> DynamoUserTable
+
+  ```
+
+  ***
+
+  ### 4️⃣ DynamoDB – Database model
+
+  ***
+
+  ```mermaid
+  erDiagram
+    USERS {
+      string email PK
+      string passwordHash
+      string createdAt
     }
 
-```
+    NOTES {
+      string id PK
+      string userEmail FK
+      string title
+      string text
+      boolean deleted
+      string createdAt
+      string updatedAt
+    }
 
-___
+    USERS ||--o{ NOTES : owns
+  ```
 
-### 4️⃣ DynamoDB – Database model
-___
-```mermaid
-erDiagram
-  USERS {
-    string email PK
-    string passwordHash
-    string createdAt
-  }
+  </details>
 
-  NOTES {
-    string id PK
-    string userEmail FK
-    string title
-    string text
-    boolean deleted
-    string createdAt
-    string updatedAt
-  }
+  ## ⚙️ Installation
 
-  USERS ||--o{ NOTES : owns
-```
-</details>
+  1. Clone repo
 
+  ```bash
+  git clone <repo-url>
+  cd notes-api
+  ```
 
-##  ⚙️ Installation
-1. Clone repo
-```bash
-git clone <repo-url>
-cd notes-api
-```
+  2. Install dependencies
 
-2. Install dependencies
-```bash
-npm install -g serverless
-```
-3. Configure AWS (if you are deploying)
-```bash
-aws configure
-Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, region
-```
-4. Environment variables (local/serverless.yml)
-* JWT_SECRET — token secret key
-* (optional) STAGE, REGION
+  ```bash
+  npm install -g serverless
+  ```
 
-## Deployment
-In order to deploy the example, you need to run the following command:
+  3. Configure AWS (if you are deploying)
 
-```
-sls deploy
-```
-After running deploy, you should see output similar to:
-```
-Deploying "notes-api" to stage "dev" (eu-north-1)
-✔ Service deployed to stack notes-api-dev (43s)
-endpoint: 
-  GET - https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
-functions:
-  GetNotes: notes-api-dev-GetNotes (21 MB)
-```
-## 🚀 Testing
-You can test the API via:
-* Insomnia (export file available in project)
-* Postman 
-* curl
+  ```bash
+  aws configure
+  Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, region
+  ```
 
-## 🧭 Future improvements (roadmap)
-* 🔄 Refresh tokens / token blacklist (logout)
-* 🛡️ Rate limiting / API Gateway WAF
-* 🔍 Search index / global secondary indexes (GSI) for title search
-* 🗂 Version management / change history for notes
-* 📎 File attachments (S3) + thumbnail
-* 🧪 Integration tests & CI (GitHub Actions)
-* ⚙️ Monitoring (CloudWatch alarms + X-Ray)
-* 📊 Unit tests / Integration tests (jest + serverless offline)
+  4. Environment variables (local/serverless.yml)
 
+  - JWT_SECRET — token secret key
+  - (optional) STAGE, REGION
 
-## 📄 License & credits
-    - MIT License — free to use and modify
+  ## Deployment
 
-## Contact
-* Email: jonsoniyaz@gmail.com
+  In order to deploy the example, you need to run the following command:
+
+  ```
+  sls deploy
+  ```
+
+  After running deploy, you should see output similar to:
+
+  ```
+  Deploying "notes-api" to stage "dev" (eu-north-1)
+  ✔ Service deployed to stack notes-api-dev (43s)
+  endpoint:
+    GET - https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
+  functions:
+    GetNotes: notes-api-dev-GetNotes (21 MB)
+  ```
+
+  ## 🚀 Testing
+
+  You can test the API via:
+
+  - Insomnia (export file available in project)
+  - Postman
+  - curl
+
+  ## 🧭 Future improvements (roadmap)
+
+  - 🔄 Refresh tokens / token blacklist (logout)
+  - 🛡️ Rate limiting / API Gateway WAF
+  - 🔍 Search index / global secondary indexes (GSI) for title search
+  - 🗂 Version management / change history for notes
+  - 📎 File attachments (S3) + thumbnail
+  - 🧪 Integration tests & CI (GitHub Actions)
+  - ⚙️ Monitoring (CloudWatch alarms + X-Ray)
+  - 📊 Unit tests / Integration tests (jest + serverless offline)
+
+  ## 📄 License & credits
+
+      - MIT License — free to use and modify
+
+  ## Contact
+
+  - Email: jonsoniyaz@gmail.com
