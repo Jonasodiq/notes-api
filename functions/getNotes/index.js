@@ -9,7 +9,7 @@ const db = DynamoDBDocumentClient.from(client);
 
 const handler = async (event) => {
   try {
-    const userId = event.user.email;
+    const userId = event.user.email; // PK
 
     // Query all notes for this user
     const result = await db.send(
