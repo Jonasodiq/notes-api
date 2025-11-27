@@ -1,18 +1,5 @@
+
 # Notes API
-
-Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS Lambda and DynamoDB. Users can register, log in (JWT), and create, read, update, soft delete and restore notes. All notes are per-user and protected with JWT and a simple Middy middleware.
-
-## 📱 Features
-
-- 🧑‍💻 Register (register) + Login (login) with hashed password (bcrypt)
-- 🔐 JWT-based authentication
-- 📝 CRUD for notes
-- 🗑️ Soft delete + restore (trash)
-- ✔️ Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
-
-  - title ≤ 50 characters
-
-  # Notes API
 
   Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS Lambda and DynamoDB. Users can register, log in (JWT), and create, read, update, soft delete and restore notes. All notes are per-user and protected with JWT and a simple Middy middleware.
 
@@ -22,12 +9,12 @@ Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS
   - 🔐 JWT-based authentication
   - 📝 CRUD for notes
   - 🗑️ Soft delete + restore (trash)
-  - ✔️ Simple input validation (title ≤ 50 characters, text ≤ 300 characters)
+  - ✔️ Simple input validation title and text:
     - title ≤ 50 characters
     - text ≤ 300 characters
   - 🧩 Middy middleware for authentication and error handling
   - 🗄️ DynamoDB with PK = userId (email) and SK = id (uuid)
-    - PK = userId (email or UUID)
+    - PK = userId (user email)
     - SK = id (uuid for each note)
 
   ## 📁 Project structure
@@ -246,6 +233,7 @@ Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS
 
   ## 🧭 Future improvements (roadmap)
 
+  - 🗑️ Empty trash (trash cleanup)
   - 🔄 Refresh tokens / token blacklist (logout)
   - 🛡️ Rate limiting / API Gateway WAF
   - 🔍 Search index / global secondary indexes (GSI) for title search
