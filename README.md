@@ -177,6 +177,7 @@
 
   </details>
 
+  ***
   ## ⚙️ Installation
 
   1. Clone repo
