@@ -55,3 +55,12 @@ const handler = async (event) => {
 };
 
 module.exports.handler = middy(handler).use(authMiddleware());
+
+/** TODO:
+  1.Autentisera användaren
+  2.Ta emot en note från request-body
+  3.Validera innehållet
+  4.Skapr ett unikt id
+  5.Lägg in posten i DynamoDB med PutCommand
+  6.Returnera den skapade posten
+ */

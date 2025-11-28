@@ -16,9 +16,7 @@ const handler = async (event) => {
       new QueryCommand({
         TableName: "Notes",
         KeyConditionExpression: "userId = :u",
-        ExpressionAttributeValues: {
-          ":u": userId
-        }
+        ExpressionAttributeValues: { ":u": userId }
       })
     );
 
@@ -30,3 +28,11 @@ const handler = async (event) => {
 };
 
 module.exports.handler = middy(handler).use(authMiddleware());
+
+/** TODO:
+  1.Autentisera användaren via middleware
+  2.Läser användarens email från event.user
+  3.Hämta alla anteckningar i DynamoDB där userId matchar
+  4.Returnera anteckningarna i ett standardformat
+  5.Hanterar fel på ett snyggt sätt
+ */
