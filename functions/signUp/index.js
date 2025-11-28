@@ -49,3 +49,13 @@ exports.handler = async (event) => {
     return error(500, "Internal server error");
   }
 };
+
+/**
+  1.Autentisera användarensemail och password från request-body
+  2.Validera input
+  3.Kolla om användaren redan finns
+  4.Hasha lösenordet
+  5.Skapa användaren i DynamoDB
+  6.Returnera anteckningarna i ett standardformat
+  5.Hanterar fel på ett snyggt sätt
+ */

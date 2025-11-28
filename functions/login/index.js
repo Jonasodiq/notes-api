@@ -7,14 +7,14 @@ const { success, error } = require("../../utils/responses");
 const client = new DynamoDBClient({});
 const db = DynamoDBDocumentClient.from(client);
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret-key"; // replace in production
 
 exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
     const { email, password } = body;
 
-    // Validation
+    // Validate input
     if (!email || !password) {
       return error(400, "Email and password are required.");
     }
@@ -52,3 +52,12 @@ exports.handler = async (event) => {
     return error(500, "Internal server error");
   }
 };
+
+/** TODO:
+  1.Ta emot email och lösenord
+  2.Hämta användaren med DynamoDB GetCommand
+  3.Jämfö lösenord via bcrypt med ett hash
+  4.Skapa JWT access-token med 1h expiry
+  5.Korrekt säker felhantering
+  6.Returnera token till klienten
+ */
