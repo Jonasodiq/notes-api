@@ -16,13 +16,13 @@ functions:
   SignUp:
     handler: functions/signUp/index.handler
     events:
-      - http:
+      - httpApi:
           path: /user/signup
           method: POST
   Login:
     handler: functions/login/index.handler
     events:
-      - http:
+      - httpApi:
           path: /user/login
           method: POST
   GetNotes:
@@ -61,6 +61,20 @@ functions:
       - httpApi:
           path: /notes/deleted
           method: GET
+  EmptyTrash:
+    handler: functions/emptyTrash/index.handler
+    environment:
+      TRASH_EXPIRE_DAYS: 1
+    events:
+      - schedule:
+          rate: rate(1 day)
+          enabled: true
+  ManualEmptyTrash:
+    handler: functions/manualEmptyTrash/index.handler
+    events:
+      - httpApi:
+          path: /notes/emptyTrash
+          method: POST
 
 resources:
   Resources:
@@ -85,10 +99,24 @@ resources:
             AttributeType: S
           - AttributeName: id
             AttributeType: S
+          - AttributeName: deleted
+            AttributeType: S
+          - AttributeName: deletedAt
+            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
           - AttributeName: id
             KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: DeletedIndex
+            KeySchema:
+              - AttributeName: deleted
+                KeyType: HASH
+              - AttributeName: deletedAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
+
 

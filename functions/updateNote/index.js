@@ -11,8 +11,9 @@ const handler = async (event) => {
   try {
     const userId = event.user.email;
     const body = JSON.parse(event.body || "{}");
-    const { id, title, text } = body;
+    const { id, title, text } = body; // är det som ska uppdateras
 
+    // Validation
     if (!id || !title || !text) {
       return error(400, "id, title and text are required.");
     }
@@ -37,6 +38,7 @@ const handler = async (event) => {
       return error(404, "Note not found or does not belong to you.");
     }
 
+    // Timestamp
     const now = new Date().toISOString();
 
     // Update note
@@ -73,3 +75,12 @@ const handler = async (event) => {
 };
 
 module.exports.handler = middy(handler).use(authMiddleware());
+
+/** Todo:
+ * 1. Autentisera användaren
+ * 2. Ta emot id, title och text från request-body
+ * 3. Hämta noten i DynamoDB
+ * 4. Säkerställ att noten tillhör användaren
+ * 5. Uppdatera noten med nya värden + modifiedAt
+ * 6. Returnera den uppdaterade noten
+ */

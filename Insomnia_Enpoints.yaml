@@ -1,4 +1,5 @@
 type: collection.insomnia.rest/5.0
+schema_version: "5.1"
 name: Notes-api
 meta:
   id: wrk_801037aea344438e956bdc5ca5b49c61
@@ -6,12 +7,12 @@ meta:
   modified: 1763759546120
   description: ""
 collection:
-  - url: https://6fhik69377.execute-api.eu-north-1.amazonaws.com/dev/user/signup
+  - url: "{{base_url}}/user/signup"
     name: SignUp
     meta:
       id: req_11bb63e47e2a4f1eb3385ee31704dfeb
       created: 1763759561317
-      modified: 1763816592048
+      modified: 1764431077680
       isPrivate: false
       description: ""
       sortKey: -1763759561317
@@ -20,7 +21,7 @@ collection:
       mimeType: application/json
       text: |-
         {
-          "email": "test1@mail.com",
+          "email": "test2200@mail.com",
           "password": "123456"
         }
     headers:
@@ -36,12 +37,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://6fhik69377.execute-api.eu-north-1.amazonaws.com/dev/user/login
+  - url: "{{base_url}}/user/login"
     name: Login
     meta:
       id: req_a41b3c19201840af937c0affd356cf36
       created: 1763761069406
-      modified: 1763817461058
+      modified: 1764424399651
       isPrivate: false
       description: ""
       sortKey: -1763761069406
@@ -68,12 +69,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
+  - url: "{{base_url}}notes"
     name: GetNotes
     meta:
       id: req_9618615a13bd43aa948db79250fd0b0c
       created: 1763761935791
-      modified: 1763827146143
+      modified: 1764424512240
       isPrivate: false
       description: ""
       sortKey: -1763761935791
@@ -83,8 +84,8 @@ collection:
         value: insomnia/12.0.0
     authentication:
       type: bearer
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjM4MjUxNDQsImV4cCI6MTc2MzgyODc0NH0.RxStjVGE8wmCw6oHR4GXXhfiElzoKBalJMYzbtsjaQY
       disabled: false
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
     settings:
       renderRequestBody: true
       encodeUrl: true
@@ -93,12 +94,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
+  - url: "{{base_url}}/notes"
     name: CreateNote
     meta:
       id: req_720d612f2abb4403b548b6845e58c915
       created: 1763800795762
-      modified: 1763827687279
+      modified: 1764424794549
       isPrivate: false
       description: ""
       sortKey: -1763800795762
@@ -107,8 +108,8 @@ collection:
       mimeType: application/json
       text: |
         {
-          "title": "Jobb anteckningar",
-          "text": "Fixa API-fel, testa restore, förbättra error-handling"
+          "title": "Test 1 dag base",
+          "text": "29 nov kl 14:50"
         }
     headers:
       - name: Content-Type
@@ -117,7 +118,7 @@ collection:
         value: insomnia/12.0.0
     authentication:
       type: bearer
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjM4MjUxNDQsImV4cCI6MTc2MzgyODc0NH0.RxStjVGE8wmCw6oHR4GXXhfiElzoKBalJMYzbtsjaQY
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
       prefix: ""
     settings:
       renderRequestBody: true
@@ -127,12 +128,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
+  - url: "{{base_url}}/notes"
     name: UpdateNote
     meta:
       id: req_692d64d3c5ba4a8ca776fe2b997bd4d7
       created: 1763810660121
-      modified: 1763827371542
+      modified: 1764424928792
       isPrivate: false
       description: ""
       sortKey: -1763810660121
@@ -141,19 +142,18 @@ collection:
       mimeType: application/json
       text: |-
         {
-          "id": "8ea1e898-de0e-4568-a049-0661d03e9e52",
-          "title": "Träningsschema",
-          "text": "Benpass måndag, Rygg tisdag, Löpning torsdag"
+          "id": "c4122cbc-274c-4286-b6b3-f2be547fd63d",
+          "title": "Uppdatera Title4",
+          "text": "Uppdatera text3 fixat bugg"
         }
     headers:
       - name: Content-Type
         value: application/json
       - name: User-Agent
         value: insomnia/12.0.0
-        id: pair_aed6c9f35b3c4ef6aed1a261afda54fe
     authentication:
       type: bearer
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjM4MjUxNDQsImV4cCI6MTc2MzgyODc0NH0.RxStjVGE8wmCw6oHR4GXXhfiElzoKBalJMYzbtsjaQY
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
     settings:
       renderRequestBody: true
       encodeUrl: true
@@ -162,12 +162,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
+  - url: "{{base_url}}/notes"
     name: DeleteNote
     meta:
       id: req_f6a15b04074349a780c91031155a1c6c
       created: 1763815106422
-      modified: 1763825268005
+      modified: 1764425230739
       isPrivate: false
       description: ""
       sortKey: -1763815106422
@@ -176,17 +176,16 @@ collection:
       mimeType: application/json
       text: |
         {
-          "id": "74e4796c-1882-4cde-8e30-da2bfdd01640"
+          "id": "97cffb2e-695f-46f9-97f4-9176b3908873"
         }
     headers:
       - name: Content-Type
         value: application/json
       - name: User-Agent
         value: insomnia/12.0.0
-        id: pair_7545ec5f918640a585a6b2bfbff72989
     authentication:
       type: bearer
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjM4MjUxNDQsImV4cCI6MTc2MzgyODc0NH0.RxStjVGE8wmCw6oHR4GXXhfiElzoKBalJMYzbtsjaQY
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
     settings:
       renderRequestBody: true
       encodeUrl: true
@@ -195,12 +194,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes/restore
+  - url: "{{base_url}}/notes/restore"
     name: RestoneNote
     meta:
       id: req_e6ae925114854212a094479f3ae91698
       created: 1763816464409
-      modified: 1763825630977
+      modified: 1764425383158
       isPrivate: false
       description: ""
       sortKey: -1763816464409
@@ -209,17 +208,16 @@ collection:
       mimeType: application/json
       text: |
         {
-          "id": "8ea1e898-de0e-4568-a049-0661d03e9e52"
+          "id": "97cffb2e-695f-46f9-97f4-9176b3908873"
         }
     headers:
       - name: Content-Type
         value: application/json
       - name: User-Agent
         value: insomnia/12.0.0
-        id: pair_623ca6bd8ce54dff822ad28001c2b227
     authentication:
       type: bearer
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjM4MjUxNDQsImV4cCI6MTc2MzgyODc0NH0.RxStjVGE8wmCw6oHR4GXXhfiElzoKBalJMYzbtsjaQY
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
     settings:
       renderRequestBody: true
       encodeUrl: true
@@ -228,12 +226,12 @@ collection:
         send: true
         store: true
       rebuildPath: true
-  - url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes/deleted
+  - url: "{{base_url}}/notes/deleted"
     name: GetDeletedNotes
     meta:
       id: req_c69fcd91ff404993bfa3671383106748
       created: 1763819016019
-      modified: 1763825317579
+      modified: 1764425445699
       isPrivate: false
       description: ""
       sortKey: -1763819016019
@@ -243,7 +241,38 @@ collection:
         value: insomnia/12.0.0
     authentication:
       type: bearer
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjM4MjUxNDQsImV4cCI6MTc2MzgyODc0NH0.RxStjVGE8wmCw6oHR4GXXhfiElzoKBalJMYzbtsjaQY
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{base_url}}/notes/emptyTrash"
+    name: EmptyTrash
+    meta:
+      id: req_40fecabb6cef4fb59b63c997c7fca93a
+      created: 1764416614133
+      modified: 1764425095253
+      isPrivate: false
+      description: ""
+      sortKey: -1763815785415.5
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        
+        {}
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.0.0
+    authentication:
+      type: bearer
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NjQ0MjQ0MDIsImV4cCI6MTc2NDQyODAwMn0.z0wsZY0EAV3NhT95HRQn7gIRa_xOZTy_hxEAVBSlRCw
     settings:
       renderRequestBody: true
       encodeUrl: true
@@ -263,5 +292,7 @@ environments:
   meta:
     id: env_3da219cd41d9faf8c9b5f5e2ce766785c19fbf04
     created: 1763759546121
-    modified: 1763759546121
+    modified: 1764424189837
     isPrivate: false
+  data:
+    base_url: https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/

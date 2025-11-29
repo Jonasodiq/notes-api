@@ -1,21 +1,27 @@
 
 # Notes API
 
-  Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS Lambda and DynamoDB. Users can register, log in (JWT), and create, read, update, soft delete and restore notes. All notes are per-user and protected with JWT and a simple Middy middleware.
+  Notes API is a serverless REST API built with Node.js, Serverless Framework, AWS Lambda and DynamoDB.  
+  Users can register, log in (JWT), and create, read, update, soft delete, restore notes — and permanently delete items through trash cleanup (manual or automatic).
+
+  All notes are per-user and protected with JWT using a custom Middy authentication middleware.
 
   ## 📱 Features
 
-  - 🧑‍💻 Register (register) + Login (login) with hashed password (bcrypt)
+  - 🧑‍💻 Register (signup) + Login (login) with hashed password (bcrypt)
   - 🔐 JWT-based authentication
   - 📝 CRUD for notes
-  - 🗑️ Soft delete + restore (trash)
-  - ✔️ Simple input validation title and text:
-    - title ≤ 50 characters
+  - 🗑️ Soft delete notes → moves them to “trash”
+  - ♻️ Restore notes from trash
+  - 🧹 **Empty trash manually (API: `/notes/empty-trash`)**
+  - ⏳ **Auto-empty trash every X days (Scheduled Lambda)**
+  - ✔️ Title + text validation  
+    - title ≤ 50 characters  
     - text ≤ 300 characters
-  - 🧩 Middy middleware for authentication and error handling
-  - 🗄️ DynamoDB with PK = userId (email) and SK = id (uuid)
-    - PK = userId (user email)
-    - SK = id (uuid for each note)
+  - 🧩 Middy middleware for authentication
+  - 🗄️ DynamoDB with PK/SK  
+    - PK = userId (email)  
+    - SK = id (uuid)
 
   ## 📁 Project structure
 
@@ -29,6 +35,7 @@
     │   ├── updateNote/index.js
     │   ├── deleteNote/index.js
     │   ├── restoreNote/index.js
+    │   ├── emptyTrash/index.js
     │   └── getDeletedNotes/index.js
     ├──utils
     │   ├── middleware.js
@@ -51,15 +58,16 @@
 
   ### 📝 Notes Table
 
-  | variable   | type | Description                           |
-  | ---------- | :--: | ------------------------------------- |
-  | userId     |  S   | Partition key (linked to Users.email) |
-  | id         |  S   | Sort key (unique note ID)             |
-  | title      |  S   | Title of the note                     |
-  | text       |  S   | Note content                          |
-  | createdAt  |  S   | ISO timestamp                         |
-  | modifiedAt |  S   | ISO timestamp                         |
-  | deleted    | BOOL | Soft delete flag                      |
+  | variable   | type | Description                            |
+  | ---------- | :--: | -------------------------------------- |
+  | userId     |  S   | Partition key (Users.email)            |
+  | id         |  S   | Sort key (unique note ID)              |
+  | title      |  S   | Note title                             |
+  | text       |  S   | Note body                              |
+  | createdAt  |  S   | Timestamp                              |
+  | modifiedAt |  S   | Timestamp                              |
+  | deleted    | BOOL | Soft delete flag (trash)               |
+  | deletedAt  |  S   | Timestamp (used for auto-trash cleanup)|
 
   ## 📊 Mermaid-diagram
 
@@ -128,6 +136,7 @@
       +deleteNote()
       +restoreNote()
       +getDeletedNotes()
+      +emptyTrash()
     }
     class DynamoUserTable {
       +putUser()
@@ -140,6 +149,7 @@
       +restoreNote()
       +getDeletedNotes()
       +deleteNote()
+      +emptyTrash()
     }
     AuthMiddleware <.. UserHandlers
     AuthMiddleware <.. NotesHandlers
@@ -164,12 +174,13 @@
 
     NOTES {
       string id PK
-      string userEmail FK
+      string userId FK
       string title
       string text
       boolean deleted
+      string deletedAt
       string createdAt
-      string updatedAt
+      string modifiedAt
     }
 
     USERS ||--o{ NOTES : owns
@@ -190,6 +201,7 @@
   2. Install dependencies
 
   ```bash
+  npm install
   npm install -g serverless
   ```
 
@@ -202,7 +214,7 @@
 
   4. Environment variables (local/serverless.yml)
 
-  - JWT_SECRET — token secret key
+  - JWT_SECRET — your-secret-key
   - (optional) STAGE, REGION
 
   ## Deployment
@@ -217,11 +229,9 @@
 
   ```
   Deploying "notes-api" to stage "dev" (eu-north-1)
-  ✔ Service deployed to stack notes-api-dev (43s)
+  ✔ Service deployed to stack notes-api-dev
   endpoint:
     GET - https://4ycxjrwmpi.execute-api.eu-north-1.amazonaws.com/notes
-  functions:
-    GetNotes: notes-api-dev-GetNotes (21 MB)
   ```
 
   ## 🚀 Testing
@@ -229,25 +239,29 @@
   You can test the API via:
 
   - Insomnia (export file available in project)
-  - Postman
+  - Postman (export file available in project)
   - curl
 
-  ## 🧭 Future improvements (roadmap)
+  ### Example:
+  ```bash
+    curl -H "Authorization: Bearer <token>" \
+      https://api-id.execute-api.eu-north-1.amazonaws.com/notes
+  ```
 
-  - 🗑️ Empty trash (trash cleanup)
-  - 🔄 Refresh tokens / token blacklist (logout)
-  - 🛡️ Rate limiting / API Gateway WAF
-  - 🔍 Search index / global secondary indexes (GSI) for title search
-  - 🗂 Version management / change history for notes
-  - 📎 File attachments (S3) + thumbnail
-  - 🧪 Integration tests & CI (GitHub Actions)
-  - ⚙️ Monitoring (CloudWatch alarms + X-Ray)
-  - 📊 Unit tests / Integration tests (jest + serverless offline)
+  ## 🧭 Future improvements (roadmap)
+  - [x] 🗑️ Manual empty trash
+  - [x] ⏳ Auto trash cleanup via scheduled Lambda
+  - [ ] 🔄 Refresh tokens / token blacklist (logout)
+  - [ ] 🛡️ Rate limiting / API Gateway WAF
+  - [ ] 🔍 Search index / global secondary indexes (GSI) for title search
+  - [ ] 🗂 Version management / change history for notes
+  - [ ] 📎 File attachments (S3) + thumbnail
+  - [ ] 🧪 Integration tests & CI (GitHub Actions)
+  - [ ] ⚙️ Monitoring (CloudWatch alarms + X-Ray)
+  - [ ] 📊 Unit tests / Integration tests (jest + serverless offline)
 
   ## 📄 License & credits
-
-      - MIT License — free to use and modify
+    - MIT License — free to use and modify
 
   ## Contact
-
-  - Email: jonsoniyaz@gmail.com
+    - Email: jonsoniyaz@gmail.com
