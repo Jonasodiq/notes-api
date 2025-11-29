@@ -11,18 +11,22 @@ const handler = async (event) => {
   try {
     const userId = event.user.email;
 
+    // Query via GSI (DeletedIndex)
     const result = await db.send(
       new QueryCommand({
         TableName: "Notes",
-        KeyConditionExpression: "userId = :uid",
-        FilterExpression: "#deleted = :deleted",
+        IndexName: "DeletedIndex",
+        KeyConditionExpression: "#deleted = :d",
+        FilterExpression: "#uid = :uid", // Begränsa till denna användare
         ExpressionAttributeNames: {
-          "#deleted": "deleted"
+          "#deleted": "deleted",
+          "#uid": "userId"
         },
         ExpressionAttributeValues: {
-          ":uid": userId,
-          ":deleted": true
-        }
+          ":d": "true",   // deleted = true (string)
+          ":uid": userId
+        },
+        ScanIndexForward: false // Nyast först 
       })
     );
 
@@ -35,3 +39,16 @@ const handler = async (event) => {
 };
 
 module.exports.handler = middy(handler).use(authMiddleware());
+
+/** GET Deleted Notes Flow:
+ * -----------------------
+ * 1. Autentisera användaren via authMiddleware
+ * 2. Query på GSI DeletedIndex med deleted = "true"
+ * 3. Filtera på userId för att hämta bara användarens notes
+ * 4. Returnera alla notes i papperskorgen
+ *
+ * Den passar ihop med:
+ *  - DELETE → set deleted="true"
+ *  - RESTORE → set deleted="false"
+ *  - EMPTY TRASH → delete all deleted="true"
+ */

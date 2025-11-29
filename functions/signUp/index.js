@@ -50,7 +50,7 @@ exports.handler = async (event) => {
   }
 };
 
-/**
+/** Todo:
   1.Autentisera användarensemail och password från request-body
   2.Validera input
   3.Kolla om användaren redan finns
